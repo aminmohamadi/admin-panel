@@ -13,7 +13,7 @@
       </div>
     </vx-card>
     <data-view-sidebar :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData"/>
-    <vx-card actionButtons @refresh="fetch_roles" title="همه نقش ها" class="roles-list mb-8">
+    <vx-card actionButtons @refresh="fetch" title="همه نقش ها" class="roles-list mb-8">
       <vs-table ref="table" multiple v-model="selected" pagination :max-items="itemsPerPage" :data="resultQuery"
                 noDataText="موردی برای نمایش وجود ندارد">
 
@@ -99,7 +99,7 @@
               <p class="product-category">{{ tr.description }}</p>
             </vs-td>
             <vs-td class="text-center">
-              <button @click.stop="$router.push('/role/'+tr.id+'/functionality')">دسترسی های نقش</button>
+              <a @click.stop="$router.push('/role/'+tr.id+'/functionality')">دسترسی های نقش</a>
             </vs-td>
 
             <vs-td class="whitespace-no-wrap text-center">
@@ -179,7 +179,7 @@ export default {
     toggleDataSidebar (val = false) {
       this.addNewDataSidebar = val
     },
-    fetch_roles (card) {
+    fetch (card) {
       axios.get(`/roles`)
           .then((response) => {
             this.roles = response.data.roles
@@ -244,7 +244,7 @@ export default {
     }
   },
   created () {
-    this.fetch_roles()
+    this.fetch()
   },
   mounted () {
     this.isMounted = true

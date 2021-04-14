@@ -2,41 +2,29 @@
   <div id="data-list-list-view" class="data-list-container">
     <vx-card ref="filterCard" title="جست و جو" class="users-list-filters mb-8">
       <div class="vx-row">
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
+        <div class="vx-col md:w-1/2 sm:w-1/2 w-full">
           <label for="name" class="text-sm opacity-75">نام</label>
-          <vs-input id="name" v-model="firstNameSearchQuery" class="w-full mt-4" placeholder="نام"/>
+          <vs-input id="name" v-model="searchQuery.firstName" class="w-full mt-4" placeholder="نام"/>
         </div>
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
+        <div class="vx-col md:w-1/2 sm:w-1/2 w-full">
           <label for="lastName" class="text-sm opacity-75">نام</label>
-          <vs-input id="lastName" v-model="lastNameSearchQuery" class="w-full mt-4" placeholder=" نام خانوادگی"/>
+          <vs-input id="lastName" v-model="searchQuery.lastName" class="w-full mt-4" placeholder=" نام خانوادگی"/>
         </div>
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
-          <label for="userName" class="text-sm opacity-75">نام کاربری</label>
-          <vs-input id="userName" v-model="userNameSearchQuery" class="w-full mt-4" placeholder="نام کاربری"/>
-        </div>
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
+        <div class="vx-col md:w-1/2 sm:w-1/2 w-full">
           <label for="email" class="text-sm opacity-75">ایمیل</label>
-          <vs-input id="email" v-model="emailSearchQuery" class="w-full mt-4" placeholder="ایمیل"/>
+          <vs-input id="email" v-model="searchQuery.email" class="w-full mt-4" placeholder="ایمیل"/>
         </div>
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
+        <div class="vx-col md:w-1/2 sm:w-1/2 w-full">
           <label for="status" class="text-sm opacity-75">وضعیت</label>
-          <vs-select id="status" v-model="statusSearchQuery" class="w-full mt-4">
-            <vs-select-item value="" label="همه" text="همه"></vs-select-item>
-            <vs-select-item value="active" label="فعال" text="فعال"></vs-select-item>
-            <vs-select-item value="deactive" label="غیرفعال" text="غیرفعال"></vs-select-item>
-          </vs-select>
-        </div>
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
-          <label for="role" class="text-sm opacity-75">نقش</label>
-          <vs-select id="role" v-model="roleSearchQuery" class="w-full mt-4">
-            <vs-select-item value="" label="همه" text="همه"></vs-select-item>
-            <vs-select-item v-for="(item,index) in allRoles" :key="index" :value="item.name" :label="item.description"
-                            :text="item.description"></vs-select-item>
+          <vs-select id="status" v-model="searchQuery.status" class="w-full mt-4">
+            <vs-select-item label="همه" text="همه"/>
+            <vs-select-item value="active" label="فعال" text="فعال"/>
+            <vs-select-item value="deactive" label="غیرفعال" text="غیرفعال"/>
           </vs-select>
         </div>
       </div>
     </vx-card>
-    <vx-card actionButtons @refresh="fetch_users" title="همه نقش ها" class="roles-list mb-8">
+    <vx-card actionButtons @refresh="fetch" title="همه نقش ها" class="roles-list mb-8">
       <vs-table ref="table" multiple v-model="selected" pagination :max-items="itemsPerPage" :data="resultQuery"
                 noDataText="موردی برای نمایش وجود ندارد">
 
@@ -125,20 +113,18 @@ export default {
   },
   data () {
     return {
-      roles: '',
-      userNameSearchQuery: '',
-      firstNameSearchQuery: '',
-      lastNameSearchQuery: '',
-      emailSearchQuery: '',
-      roleSearchQuery: '',
-      statusSearchQuery: '',
+      searchQuery: {
+        firstName: '',
+        lastName:'',
+        email:'',
+        status:'',
+      },
       selected: [],
       users: [],
       itemsPerPage: 4,
       isMounted: false,
       addNewDataSidebar: false,
       sidebarData: {},
-      allRoles: []
     }
   },
   computed: {
@@ -153,15 +139,13 @@ export default {
       return this.$refs.table ? this.$refs.table.queriedResults.length : this.users.length
     },
     resultQuery () {
-      if (this.firstNameSearchQuery !== '' || this.lastNameSearchQuery !== '' || this.userNameSearchQuery !== ''
-          || this.emailSearchQuery !== '' || this.roleSearchQuery !== '' || this.statusSearchQuery !== '') {
+      if (this.searchQuery.firstName !== '' || this.searchQuery.lastName !== '' || this.searchQuery.email !== ''
+          || this.searchQuery.status !== ''  ) {
         return this.users.filter((item) => {
-          return this.firstNameSearchQuery.toLowerCase().split(' ').every(v => item.first_name.toLowerCase().includes(v)) &&
-              this.lastNameSearchQuery.toLowerCase().split(' ').every(v => item.last_name.toLowerCase().includes(v)) &&
-              this.userNameSearchQuery.toLowerCase().split(' ').every(v => item.username.toLowerCase().includes(v)) &&
-              this.emailSearchQuery.toLowerCase().split(' ').every(v => item.email.toLowerCase().includes(v)) &&
-              this.statusSearchQuery.toLowerCase().split(' ').every(v => item.status.toLowerCase().includes(v)) &&
-              this.roleSearchQuery.toLowerCase().split(' ').every(v => item.role.toLowerCase().includes(v))
+          return this.searchQuery.firstName.toLowerCase().split(' ').every(v => item.first_name.toLowerCase().includes(v)) &&
+              this.searchQuery.lastName.toLowerCase().split(' ').every(v => item.last_name.toLowerCase().includes(v)) &&
+              this.searchQuery.email.toLowerCase().split(' ').every(v => item.email.toLowerCase().includes(v)) &&
+              this.searchQuery.status.toLowerCase().split(' ').every(v => item.status.toLowerCase().includes(v))
         })
       } else {
         return this.users
@@ -170,14 +154,14 @@ export default {
   },
   methods: {
 
-    fetch_users (card) {
+    fetch (card) {
       axios.get(`/users`)
           .then((response) => {
             this.users = response.data.users
             card.removeRefreshAnimation()
           })
           .catch((error) => {
-            reject(error)
+            console.log(error)
           })
     },
     confirmDeleteRecord (id) {
@@ -223,7 +207,7 @@ export default {
     }
   },
   created () {
-    this.fetch_users()
+    this.fetch()
   },
   mounted () {
     this.isMounted = true
