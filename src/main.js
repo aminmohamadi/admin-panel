@@ -1,13 +1,3 @@
-/*=========================================================================================
-  File Name: main.js
-  Description: main vue(js) file
-  ----------------------------------------------------------------------------------------
-  Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
-  Author: Pixinvent
-  Author URL: http://www.themeforest.net/user/pixinvent
-==========================================================================================*/
-
-
 import Vue from 'vue'
 import App from './App.vue'
 
@@ -111,12 +101,13 @@ import 'prismjs/themes/prism-tomorrow.css'
 
 // Feather font icon
 require('./assets/css/iconfont.css')
-
-
 // Vue select css
 // Note: In latest version you have to add it separately
 // import 'vue-select/dist/vue-select.css';
+import PerfectScrollbar from "vue2-perfect-scrollbar";
+import "vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css";
 
+Vue.use(PerfectScrollbar);
 
 Vue.config.productionTip = false
 

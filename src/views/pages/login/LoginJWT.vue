@@ -40,8 +40,8 @@
 export default {
   data () {
     return {
-      email: 'admin@admin.com',
-      password: 'adminadmin',
+      email: '',
+      password: '',
       checkbox_remember_me: false
     }
   },
@@ -78,10 +78,11 @@ export default {
       this.$vs.loading()
 
       const payload = {
-        checkbox_remember_me: this.checkbox_remember_me,
+
         userDetails: {
           email: this.email,
-          password: this.password
+          password: this.password,
+          remember: this.checkbox_remember_me
         }
       }
 

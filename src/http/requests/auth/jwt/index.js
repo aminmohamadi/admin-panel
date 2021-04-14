@@ -46,7 +46,7 @@ export default {
     })
   },
   login (email, pwd) {
-    return axios.post('/api/auth/login', {
+    return axios.post('/login', {
       email,
       password: pwd
     })

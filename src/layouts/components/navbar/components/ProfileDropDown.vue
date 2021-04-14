@@ -3,13 +3,13 @@
 
     <div class="text-right leading-tight hidden sm:block">
       <p class="font-semibold">{{ activeUserInfo.displayName }}</p>
-      <small>Available</small>
+      <small>در دسترس</small>
     </div>
 
     <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">
 
       <div class="con-img ml-3">
-        <img v-if="activeUserInfo.photoURL" key="onlineImg" :src="activeUserInfo.photoURL" alt="user-img" width="40" height="40" class="rounded-full shadow-md cursor-pointer block" />
+        <img v-if="activeUserInfo.avatar" key="onlineImg" :src="activeUserInfo.avatar" alt="user-img" width="40" height="40" class="rounded-full shadow-md cursor-pointer block" />
       </div>
 
       <vs-dropdown-menu class="vx-navbar-dropdown">
@@ -19,35 +19,13 @@
             class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
             @click="$router.push('/pages/profile').catch(() => {})">
             <feather-icon icon="UserIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Profile</span>
+            <span class="ml-2">پروفایل</span>
           </li>
-
-          <li
-            class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-            @click="$router.push('/apps/email').catch(() => {})">
-            <feather-icon icon="MailIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Inbox</span>
-          </li>
-
           <li
             class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
             @click="$router.push('/apps/todo').catch(() => {})">
             <feather-icon icon="CheckSquareIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Tasks</span>
-          </li>
-
-          <li
-            class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-            @click="$router.push('/apps/chat').catch(() => {})">
-            <feather-icon icon="MessageSquareIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Chat</span>
-          </li>
-
-          <li
-            class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-            @click="$router.push('/apps/eCommerce/wish-list').catch(() => {})">
-            <feather-icon icon="HeartIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Wish List</span>
+            <span class="ml-2">وظایف روزانه</span>
           </li>
 
           <vs-divider class="m-1" />
@@ -56,7 +34,7 @@
             class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
             @click="logout">
             <feather-icon icon="LogOutIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Logout</span>
+            <span class="ml-2">خروج</span>
           </li>
         </ul>
       </vs-dropdown-menu>
@@ -65,8 +43,7 @@
 </template>
 
 <script>
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import axios from './../../../../http/axios/index'
 
 export default {
   data () {
@@ -85,18 +62,11 @@ export default {
       // if user is logged in via auth0
       if (this.$auth.profile) this.$auth.logOut()
 
-      // if user is logged in via firebase
-      const firebaseCurrentUser = firebase.auth().currentUser
-
-      if (firebaseCurrentUser) {
-        firebase.auth().signOut().then(() => {
-          this.$router.push('/pages/login').catch(() => {})
-        })
-      }
       // If JWT login
+      axios.post('logout')
       if (localStorage.getItem('accessToken')) {
         localStorage.removeItem('accessToken')
-        this.$router.push('/pages/login').catch(() => {})
+        this.$router.push('/login').catch(() => {})
       }
 
       // Change role on logout. Same value as initialRole of acj.js
@@ -104,7 +74,8 @@ export default {
       localStorage.removeItem('userInfo')
 
       // This is just for demo Purpose. If user clicks on logout -> redirect
-      this.$router.push('/pages/login').catch(() => {})
+      this.$router.push('/login').catch(() => {})
+
     }
   }
 }

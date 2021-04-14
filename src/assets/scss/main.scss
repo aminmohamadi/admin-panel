@@ -26,3 +26,23 @@
 
 // rtl
 @import "vuexy/rtl";
+
+@font-face {
+  font-family: Yekan;
+  src: url('../fonts/B_Yekan/Yekan.ttf');
+}
+p, h1 , h2, h3, h4, h5, h6, span, label  ,input ,textarea ,select, button, div{
+  font-family: Yekan;
+}
+.con-vs-dialog .vs-dialog footer {
+  justify-content: flex-start!important;
+}
+th .sort-th, th .vs-table-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  flex-direction: column;
+}

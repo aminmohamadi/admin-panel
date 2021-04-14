@@ -301,14 +301,12 @@ export default {
 
   // JWT
   loginJWT ({ commit }, payload) {
-
     return new Promise((resolve, reject) => {
-      jwt.login(payload.userDetails.email, payload.userDetails.password)
+      jwt.login(payload.userDetails.email, payload.userDetails.password,payload.userDetails.remember)
         .then(response => {
 
           // If there's user data in response
           if (response.data.userData) {
-
             // Set accessToken
             localStorage.setItem('accessToken', response.data.accessToken)
 
@@ -323,7 +321,7 @@ export default {
 
             resolve(response)
           } else {
-            reject({message: 'Wrong Email or Password'})
+            reject({message: 'ایمیل یا رمز عبور اشتباه است'})
           }
 
         })

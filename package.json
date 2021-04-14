@@ -56,6 +56,7 @@
     "vue-video-player": "^5.0.2",
     "vue2-google-maps": "^0.10.6",
     "vue2-hammer": "^2.1.2",
+    "vue2-perfect-scrollbar": "^1.5.0",
     "vuedraggable": "^2.21.0",
     "vuejs-datepicker": "^1.5.4",
     "vuesax": "jd-0001/vuesax",
@@ -65,7 +66,6 @@
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^1.2.0",
     "@vue/cli-plugin-babel": "^3.7.0",
-    "@vue/cli-plugin-eslint": "^3.7.0",
     "@vue/cli-service": "^3.7.0",
     "axios-mock-adapter": "^1.17.0",
     "node-sass": "^4.12.0",
