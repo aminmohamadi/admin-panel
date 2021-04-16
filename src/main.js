@@ -15,20 +15,9 @@ Vue.prototype.$http = axios
 // API Calls
 import './http/requests'
 
-// mock
-import './fake-db/index.js'
-
 // Theme Configurations
 import '../themeConfig.js'
 
-
-// Firebase
-import '@/firebase/firebaseConfig'
-
-
-// Auth0 Plugin
-import AuthPlugin from './plugins/auth'
-Vue.use(AuthPlugin)
 
 
 // ACL
@@ -108,7 +97,13 @@ import PerfectScrollbar from "vue2-perfect-scrollbar";
 import "vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css";
 
 Vue.use(PerfectScrollbar);
+import VueQuillEditor from 'vue-quill-editor'
 
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
+
+Vue.use(VueQuillEditor, /* { default global options } */)
 Vue.config.productionTip = false
 
 new Vue({

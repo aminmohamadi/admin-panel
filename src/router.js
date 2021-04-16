@@ -84,6 +84,26 @@ const MyRouter = [
           authRequired: true
 
         }
+      },
+      {
+        path: '/comments',
+        name: 'comments',
+        component: () => import('./views/Comments/Comments.vue'),
+        meta: {
+          rule: 'admin',
+          authRequired: true
+
+        }
+      },
+      {
+        path: '/courses',
+        name: 'courses',
+        component: () => import('./views/Courses/Courses'),
+        meta: {
+          rule: 'admin',
+          authRequired: true
+
+        }
       }
     ]
   },
