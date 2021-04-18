@@ -58,14 +58,10 @@ export default {
   },
   methods: {
     logout () {
-
-      // if user is logged in via auth0
-      if (this.$auth.profile) this.$auth.logOut()
-
       // If JWT login
       axios.post('logout')
-      if (localStorage.getItem('accessToken')) {
-        localStorage.removeItem('accessToken')
+      if (localStorage.getItem('access_token')) {
+        localStorage.removeItem('access_token')
         this.$router.push('/login').catch(() => {})
       }
 

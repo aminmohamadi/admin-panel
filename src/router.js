@@ -104,7 +104,27 @@ const MyRouter = [
           authRequired: true
 
         }
-      }
+      },
+      {
+        path: '/course/:id/episodes',
+        name: 'episodes',
+        component: () => import('./views/Episodes/Episodes.vue'),
+        meta: {
+          rule: 'admin',
+          authRequired: true
+
+        }
+      },
+      {
+        path: '/articles',
+        name: 'articles',
+        component: () => import('./views/Articles/Articles.vue'),
+        meta: {
+          rule: 'admin',
+          authRequired: true
+
+        }
+      },
     ]
   },
   // =============================================================================

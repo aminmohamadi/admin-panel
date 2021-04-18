@@ -98,9 +98,9 @@ export default [
     icon: 'BookIcon',
     submenu: [
       {
-        url: '/posts',
-        name: 'پست ها',
-        slug: 'پست ها',
+        url: '/articles',
+        name: 'مقالات',
+        slug: 'مقالات',
       },
       {
         url: '/comments',

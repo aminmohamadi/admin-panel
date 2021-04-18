@@ -2,7 +2,7 @@
   <vs-sidebar click-not-close position-right parent="body" default-index="1" color="primary"
               class="add-new-data-sidebar items-no-padding" spacer v-model="isSidebarActiveLocal">
     <div class="mt-6 flex items-center justify-between px-6">
-      <h4>{{ Object.entries(this.data).length === 0 ? 'افزودن' : 'ویرایش' }} دوره</h4>
+      <h4>{{ Object.entries(this.data).length === 0 ? 'افزودن' : 'ویرایش' }} مقاله</h4>
       <feather-icon icon="XIcon" @click.stop="isSidebarActiveLocal = false" class="cursor-pointer"></feather-icon>
     </div>
     <vs-divider class="mb-0"></vs-divider>
@@ -56,22 +56,6 @@
           <div class="vs-col col-12 mt-5 w-1/3 px-2">
             <vs-input label="کلمات کلیدی" v-model="dataTags" class="w-full" name="item-tags" v-validate="'required'"/>
             <span class="text-danger text-sm" v-show="errors.has('item-tags')">{{ errors.first('item-tags') }}</span>
-          </div>
-          <div class="vs-col col-12 mt-5 w-1/3 px-2">
-            <vs-select label="نوع دوره" v-model="dataType" v-validate="'required'" class="w-full"
-                       name="item-phone">
-              <vs-select-item value="" text="انتخاب کنید" label="انتخاب کنید" />
-              <vs-select-item value="free" text="رایگان" label="رایگان" />
-              <vs-select-item value="cash" text="نقدی" label="نقدی" />
-              <vs-select-item value="vip" text="اعضای ویژه" label="اعضای ویژه" />
-            </vs-select>
-            <span class="text-danger text-sm" v-show="errors.has('item-phone')">{{
-                errors.first('item-phone')
-              }}</span>
-          </div>
-          <div class="vs-col col-12 mt-5 w-1/3 px-2">
-            <vs-input label="قیمت" v-model="dataPrice" class="w-full" name="item-price" v-validate="'required'"/>
-            <span class="text-danger text-sm" v-show="errors.has('item-price')">{{ errors.first('item-price') }}</span>
           </div>
 
         </div>
@@ -166,7 +150,7 @@ export default {
   computed: {
     isFormValid () {
       return !this.errors.any() && this.dataTitle && this.dataDescription && this.dataBody
-          && this.dataTags  && this.dataPrice  && this.dataType && this.dataImageUrl
+          && this.dataTags  && this.dataImageUrl
     },
     isSidebarActiveLocal: {
       get () {
@@ -201,24 +185,25 @@ export default {
       this.$validator.validateAll().then(result => {
         if (result) {
           let formData = new FormData();
+          if (this.file == null){
+            formData.append('image_url',this.dataImageUrl)
+          }else {
+            formData.append('image_url',this.file)
+          }
           formData.append('title',this.dataTitle)
           formData.append('description',this.dataDescription)
           formData.append('body',this.dataBody)
           formData.append('tags',this.dataTags)
-          formData.append('type',this.dataType)
-          formData.append('price',this.dataPrice)
           if (Object.entries(this.data).length === 0 ){
-            var customUrl = "/courses"
-            formData.append('image_url',this.file)
-
+            var customUrl = "/articles"
           }
           else {
-            customUrl = "courses/"+ this.dataId
+            formData.append('id',this.dataId)
+            customUrl = "articles/"+ this.dataId
             formData.append('_method','patch')
-            formData.append('image_url',this.dataImageUrl)
           }
           axios.post(customUrl,formData).then((response) => {
-            this.$parent.courses = response.data.courses
+            this.$parent.articles = response.data.articles
             this.$vs.notify({
               title: response.data.title,
               text: response.data.message,
@@ -317,7 +302,7 @@ export default {
 }
 
 .ps {
-  height: 100%;
+  height: 800px;
 }
 .ql-editor .ql-blank {
   height: 400px;

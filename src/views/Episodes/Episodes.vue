@@ -1,28 +1,7 @@
 <template>
   <div id="data-list-list-view" class="data-list-container">
-    <vx-card ref="filterCard" title="جست و جو" class="users-list-filters mb-8">
-      <div class="vx-row">
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
-          <label for="name" class="text-sm opacity-75">عنوان</label>
-          <vs-input id="name" v-model="searchQuery.title" class="w-full mt-4" placeholder="عنوان"/>
-        </div>
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
-          <label for="lastName" class="text-sm opacity-75">نویسنده</label>
-          <vs-input id="lastName" v-model="searchQuery.author" class="w-full mt-4" placeholder="نویسنده"/>
-        </div>
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
-          <label for="gender" class="text-sm opacity-75">نوع</label>
-          <vs-select id="gender" v-model="searchQuery.type" class="w-full mt-4">
-            <vs-select-item label="همه" text="همه" value=""/>
-            <vs-select-item label="رایگان" text="رایگان" value="free"/>
-            <vs-select-item label="نقدی" text="نقدی" value="cash"/>
-            <vs-select-item label="مخصوص اعضای ویژه" text="مخصوص اعضای ویژه" value="vip"/>
-          </vs-select>
-        </div>
-      </div>
-    </vx-card>
     <data-view-sidebar :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData"/>
-    <vx-card actionButtons @refresh="fetch" title="همه دوره ها" class="course-list mb-8">
+    <vx-card actionButtons @refresh="fetch" title="همه ویدیو ها" class="course-list mb-8">
       <vs-table ref="table" multiple v-model="selected" pagination :max-items="itemsPerPage" :data="resultQuery"
                 noDataText="موردی برای نمایش وجود ندارد">
 
@@ -71,10 +50,8 @@
 
         <template class="flex  flex-row-reverse" slot="thead">
           <vs-th class="text-center" sort-key="title">عنوان</vs-th>
-          <vs-th class="text-center" sort-key="author">نویسنده</vs-th>
           <vs-th class="text-center" sort-key="created_at">تاریخ انتشار</vs-th>
           <vs-th class="text-center" sort-key="type">نوع</vs-th>
-          <vs-th class="text-center" sort-key="price">قیمت</vs-th>
           <vs-th class="text-center">ویدیو های دوره</vs-th>
           <vs-th class="text-center">عملیات</vs-th>
         </template>
@@ -86,17 +63,11 @@
               <p class="product-name font-medium truncate">{{ tr.title }}</p>
             </vs-td>
             <vs-td class="text-center">
-              <p class="product-category">{{ tr.author }}</p>
-            </vs-td>
-            <vs-td class="text-center">
               <p class="product-category">{{ tr.created_at }}</p>
             </vs-td>
 
             <vs-td class="text-center">
               <p class="product-category">{{ tr.type }}</p>
-            </vs-td>
-            <vs-td class="text-center">
-              <p class="product-category">{{ tr.price }}</p>
             </vs-td>
             <vs-td class="text-center">
               <a @click.stop="$router.push('/course/'+tr.id+'/episodes')">ویدیو های دوره</a>
@@ -118,7 +89,7 @@
 </template>
 
 <script>
-import DataViewSidebar from './CourseSidebar.vue'
+import DataViewSidebar from './EpisodeSidebar.vue'
 import axios from './../../http/axios/index'
 import vSelect from 'vue-select'
 import Button from '../components/vuesax/button/Button'
@@ -132,12 +103,15 @@ export default {
   data () {
     return {
       searchQuery: {
-        title: '',
-        author:'',
-        type:'',
+        firstName: '',
+        lastName:'',
+        email:'',
+        gender:'',
+        phone:'',
+        role:''
       },
       selected: [],
-      courses: [],
+      episodes: [],
       itemsPerPage: 4,
       isMounted: false,
       addNewDataSidebar: false,
@@ -154,17 +128,21 @@ export default {
       return 0
     },
     queriedItems () {
-      return this.$refs.table ? this.$refs.table.queriedResults.length : this.courses.length
+      return this.$refs.table ? this.$refs.table.queriedResults.length : this.episodes.length
     },
     resultQuery () {
-      if (this.searchQuery.title !== '' || this.searchQuery.author !== '' || this.searchQuery.type !== '') {
-        return this.courses.filter((item) => {
-          return this.searchQuery.title.toLowerCase().split(' ').every(v => item.title.toLowerCase().includes(v)) &&
-              this.searchQuery.author.toLowerCase().split(' ').every(v => item.author.toLowerCase().includes(v)) &&
-              this.searchQuery.type.toLowerCase().split(' ').every(v => item.type.toLowerCase().includes(v))
+      if (this.searchQuery.firstName !== '' || this.searchQuery.lastName !== '' || this.searchQuery.email !== ''
+          || this.searchQuery.role !== '' || this.searchQuery.gender !== '') {
+        return this.episodes.filter((item) => {
+          return this.searchQuery.firstName.toLowerCase().split(' ').every(v => item.first_name.toLowerCase().includes(v)) &&
+              this.searchQuery.lastName.toLowerCase().split(' ').every(v => item.last_name.toLowerCase().includes(v)) &&
+              this.searchQuery.email.toLowerCase().split(' ').every(v => item.email.toLowerCase().includes(v)) &&
+              this.searchQuery.phone.toLowerCase().split(' ').every(v => item.phone.toLowerCase().includes(v)) &&
+              this.searchQuery.role.toLowerCase().split(' ').every(v => item.role.toLowerCase().includes(v)) &&
+              this.searchQuery.gender.toLowerCase().split(' ').every(v => item.gender.toLowerCase().includes(v))
         })
       } else {
-        return this.courses
+        return this.episodes
       }
     }
   },
@@ -181,9 +159,9 @@ export default {
       this.addNewDataSidebar = val
     },
     fetch (card) {
-      axios.get(`/courses`)
+      axios.get('courses/'+this.$route.params.id)
           .then((response) => {
-            this.courses = response.data.courses
+            this.episodes = response.data.episodes
             card.removeRefreshAnimation()
 
           })
@@ -204,9 +182,9 @@ export default {
       })
     },
     deleteRecord (id) {
-      axios.delete(`courses/` + id)
+      axios.delete(`course/episode/` + id)
           .then((response) => {
-            this.courses = response.data.courses
+            this.episodes = response.data.episodes
             this.$vs.notify({
               title: response.data.title,
               text: response.data.message,

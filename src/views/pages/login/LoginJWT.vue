@@ -51,29 +51,7 @@ export default {
     }
   },
   methods: {
-    checkLogin () {
-      // If user is already logged in notify
-      if (this.$store.state.auth.isUserLoggedIn()) {
-
-        // Close animation if passed as payload
-        // this.$vs.loading.close()
-
-        this.$vs.notify({
-          title: 'Login Attempt',
-          text: 'You are already logged in!',
-          iconPack: 'feather',
-          icon: 'icon-alert-circle',
-          color: 'warning'
-        })
-
-        return false
-      }
-      return true
-    },
     loginJWT () {
-
-      if (!this.checkLogin()) return
-
       // Loading
       this.$vs.loading()
 
@@ -101,7 +79,7 @@ export default {
     },
     registerUser () {
       if (!this.checkLogin()) return
-      this.$router.push('/pages/register').catch(() => {})
+      this.$router.push('/register').catch(() => {})
     }
   }
 }

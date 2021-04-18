@@ -36,7 +36,7 @@
       </div>
     </vx-card>
     <data-view-sidebar :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData"/>
-    <vx-card actionButtons @refresh="fetch" title="همه نقش ها" class="roles-list mb-8">
+    <vx-card actionButtons @refresh="fetch" title="همه مدیز ها" class="roles-list mb-8">
       <vs-table ref="table" multiple v-model="selected" pagination :max-items="itemsPerPage" :data="resultQuery"
                 noDataText="موردی برای نمایش وجود ندارد">
 
