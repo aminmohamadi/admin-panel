@@ -207,15 +207,17 @@ export default {
           formData.append('tags',this.dataTags)
           formData.append('type',this.dataType)
           formData.append('price',this.dataPrice)
+          if (this.file == null){
+            formData.append('image_url',this.dataImageUrl)
+          }else {
+            formData.append('image_url',this.file)
+          }
           if (Object.entries(this.data).length === 0 ){
             var customUrl = "/courses"
-            formData.append('image_url',this.file)
-
           }
           else {
             customUrl = "courses/"+ this.dataId
             formData.append('_method','patch')
-            formData.append('image_url',this.dataImageUrl)
           }
           axios.post(customUrl,formData).then((response) => {
             this.$parent.courses = response.data.courses
