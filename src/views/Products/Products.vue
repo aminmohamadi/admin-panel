@@ -3,40 +3,17 @@
     <vx-card ref="filterCard" title="جست و جو" class="users-list-filters mb-8">
       <div class="vx-row">
         <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
-          <label for="name" class="text-sm opacity-75">نام</label>
-          <vs-input id="name" v-model="searchQuery.firstName" class="w-full mt-4" placeholder="نام"/>
+          <label for="name" class="text-sm opacity-75">عنوان</label>
+          <vs-input id="name" v-model="searchQuery.title" class="w-full mt-4" placeholder="عنوان"/>
         </div>
         <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
-          <label for="lastName" class="text-sm opacity-75">نام</label>
-          <vs-input id="lastName" v-model="searchQuery.lastName" class="w-full mt-4" placeholder=" نام خانوادگی"/>
-        </div>
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
-          <label for="email" class="text-sm opacity-75">ایمیل</label>
-          <vs-input id="email" v-model="searchQuery.email" class="w-full mt-4" placeholder="ایمیل"/>
-        </div>
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
-          <label for="phone" class="text-sm opacity-75">موبایل</label>
-          <vs-input id="phone" v-model="searchQuery.phone" class="w-full mt-4" placeholder="موبایل"/>
-        </div>
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
-          <label for="status" class="text-sm opacity-75">نقش</label>
-          <vs-select id="status" v-model="searchQuery.role" class="w-full mt-4">
-            <vs-select-item label="همه" text="همه" value=""/>
-            <vs-select-item v-for="(item, index) in roles" :key="index" :label="item.description" :text="item.description" :value="item.description"/>
-          </vs-select>
-        </div>
-        <div class="vx-col md:w-1/3 sm:w-1/3 w-full">
-          <label for="gender" class="text-sm opacity-75">جنسیت</label>
-          <vs-select id="gender" v-model="searchQuery.gender" class="w-full mt-4">
-            <vs-select-item label="همه" text="همه" value=""/>
-            <vs-select-item label="آقا" text="آقا" value="man"/>
-            <vs-select-item label="خانم" text="خانم" value="woman"/>
-          </vs-select>
+          <label for="lastName" class="text-sm opacity-75">نویسنده</label>
+          <vs-input id="lastName" v-model="searchQuery.author" class="w-full mt-4" placeholder="نویسنده"/>
         </div>
       </div>
     </vx-card>
     <data-view-sidebar :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData"/>
-    <vx-card actionButtons @refresh="fetch" title="همه مدیز ها" class="roles-list mb-8">
+    <vx-card actionButtons @refresh="fetch" title="همه محصولات" class="course-list mb-8">
       <vs-table ref="table" multiple v-model="selected" pagination :max-items="itemsPerPage" :data="resultQuery"
                 noDataText="موردی برای نمایش وجود ندارد">
 
@@ -84,10 +61,11 @@
         </div>
 
         <template class="flex  flex-row-reverse" slot="thead">
-          <vs-th class="text-center" sort-key="name">نام و نام خانوادگی</vs-th>
-          <vs-th class="text-center">ایمیل</vs-th>
-          <vs-th class="text-center" sort-key="role">نقش</vs-th>
-          <vs-th class="text-center">تصویر</vs-th>
+          <vs-th class="text-center" sort-key="title">عنوان</vs-th>
+          <vs-th class="text-center" sort-key="author">نویسنده</vs-th>
+          <vs-th class="text-center" sort-key="created_at">تاریخ انتشار</vs-th>
+          <vs-th class="text-center" sort-key="price">قیمت</vs-th>
+          <vs-th class="text-center" sort-key="inventory">موجودی</vs-th>
           <vs-th class="text-center">عملیات</vs-th>
         </template>
 
@@ -95,19 +73,20 @@
           <tbody>
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td class="text-center">
-              <p class="product-name font-medium truncate">{{ tr.first_name }} {{ tr.last_name }}</p>
+              <p class="product-name font-medium truncate">{{ tr.title }}</p>
             </vs-td>
             <vs-td class="text-center">
-              <p class="product-category">{{ tr.email }}</p>
-            </vs-td>
-
-            <vs-td class="text-center">
-              <p class="product-category">{{ tr.role }}</p>
+              <p class="product-category">{{ tr.author }}</p>
             </vs-td>
             <vs-td class="text-center">
-              <vs-avatar size="large" :src="tr.avatar"/>
+              <p class="product-category">{{ tr.created_at }}</p>
             </vs-td>
-
+            <vs-td class="text-center">
+              <p class="product-category">{{ tr.price }}</p>
+            </vs-td>
+            <vs-td class="text-center">
+              <p class="product-category">{{ tr.inventory }}</p>
+            </vs-td>
             <vs-td class="whitespace-no-wrap text-center">
               <feather-icon icon="EditIcon" svgClasses="w-5 h-5 hover:text-warning stroke-current"
                             @click.stop="editData(tr)"/>
@@ -125,8 +104,8 @@
 </template>
 
 <script>
-import DataViewSidebar from './AdminSidebar.vue'
-import axios from '../../axios'
+import DataViewSidebar from './ProductSidebar.vue'
+import axios from './../../http/axios/index'
 import vSelect from 'vue-select'
 import Button from '../components/vuesax/button/Button'
 
@@ -139,16 +118,12 @@ export default {
   data () {
     return {
       searchQuery: {
-        firstName: '',
-        lastName:'',
-        email:'',
-        gender:'',
-        phone:'',
-        role:''
+        title: '',
+        author:'',
+        type:'',
       },
       selected: [],
-      admins: [],
-      roles: [],
+      products: [],
       itemsPerPage: 4,
       isMounted: false,
       addNewDataSidebar: false,
@@ -165,21 +140,17 @@ export default {
       return 0
     },
     queriedItems () {
-      return this.$refs.table ? this.$refs.table.queriedResults.length : this.admins.length
+      return this.$refs.table ? this.$refs.table.queriedResults.length : this.products.length
     },
     resultQuery () {
-      if (this.searchQuery.firstName !== '' || this.searchQuery.lastName !== '' || this.searchQuery.email !== ''
-          || this.searchQuery.role !== '' || this.searchQuery.gender !== '') {
-        return this.admins.filter((item) => {
-          return this.searchQuery.firstName.toLowerCase().split(' ').every(v => item.first_name.toLowerCase().includes(v)) &&
-              this.searchQuery.lastName.toLowerCase().split(' ').every(v => item.last_name.toLowerCase().includes(v)) &&
-              this.searchQuery.email.toLowerCase().split(' ').every(v => item.email.toLowerCase().includes(v)) &&
-              this.searchQuery.phone.toLowerCase().split(' ').every(v => item.phone.toLowerCase().includes(v)) &&
-              this.searchQuery.role.toLowerCase().split(' ').every(v => item.role.toLowerCase().includes(v)) &&
-              this.searchQuery.gender.toLowerCase().split(' ').every(v => item.gender.toLowerCase().includes(v))
+      if (this.searchQuery.title !== '' || this.searchQuery.author !== '' || this.searchQuery.type !== '') {
+        return this.products.filter((item) => {
+          return this.searchQuery.title.toLowerCase().split(' ').every(v => item.title.toLowerCase().includes(v)) &&
+              this.searchQuery.author.toLowerCase().split(' ').every(v => item.author.toLowerCase().includes(v)) &&
+              this.searchQuery.type.toLowerCase().split(' ').every(v => item.type.toLowerCase().includes(v))
         })
       } else {
-        return this.admins
+        return this.products
       }
     }
   },
@@ -196,10 +167,11 @@ export default {
       this.addNewDataSidebar = val
     },
     fetch (card) {
-      axios.get(`/admins`)
+      axios.get(`/products`)
           .then((response) => {
-            this.admins = response.data.admins
-            this.roles = response.data.roles
+            if (response.data.products){
+              this.products = response.data.products
+            }
             card.removeRefreshAnimation()
 
           })
@@ -220,9 +192,9 @@ export default {
       })
     },
     deleteRecord (id) {
-      axios.delete(`admins/` + id)
+      axios.delete(`products/` + id)
           .then((response) => {
-            this.admins = response.data.admins
+            this.products = response.data.products
             this.$vs.notify({
               title: response.data.title,
               text: response.data.message,
@@ -243,11 +215,10 @@ export default {
     }
   },
   created () {
-
+    this.fetch()
   },
   mounted () {
     this.isMounted = true
-    this.fetch()
 
   }
 }

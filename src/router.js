@@ -125,6 +125,26 @@ const MyRouter = [
 
         }
       },
+      {
+        path: '/products',
+        name: 'products',
+        component: () => import('./views/Products/Products'),
+        meta: {
+          rule: 'admin',
+          authRequired: true
+
+        }
+      },
+      {
+        path: '/categories',
+        name: 'categories',
+        component: () => import('./views/Categories/Category.vue'),
+        meta: {
+          rule: 'admin',
+          authRequired: true
+
+        }
+      },
     ]
   },
   // =============================================================================
@@ -196,6 +216,15 @@ const MyRouter = [
         path: '/pages/error-404',
         name: 'page-error-404',
         component: () => import('@/views/pages/Error404.vue'),
+        meta: {
+          rule: 'editor',
+          authRequired: false
+        }
+      },
+      {
+        path: '/pages/error-403',
+        name: 'page-error-404',
+        component: () => import('@/views/pages/Error403.vue'),
         meta: {
           rule: 'editor',
           authRequired: false

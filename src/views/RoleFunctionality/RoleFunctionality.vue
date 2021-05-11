@@ -1,5 +1,5 @@
 <template>
-    <vx-card actionButtons title="همه عملکرد ها" class="routes-list mb-8">
+    <vx-card actionButtons  @refresh="fetch" title="همه عملکرد ها" class="routes-list mb-8">
         <v-tree ref='tree' :canDeleteRoot="false" :data='treeData' :draggable='false' :halfcheck='true'
                 :multiple="true" @node-check="setFunction"/>
         <vs-button @click="saveFunctions" class="btn primary" :disabled="!isFormValid">ذخیره</vs-button>
@@ -8,7 +8,7 @@
 
 <script>
     import {VTree, VSelectTree} from 'vue-tree-halower'
-    import axios from "../../axios";
+    import axios from './../../http/axios/index'
 
     export default {
         data() {
@@ -39,17 +39,17 @@
         },
         methods: {
             setFunction(node) {
-                const index = this.selectedFunctions.indexOf(node.title+'_'+node.id);
+                const index = this.selectedFunctions.indexOf(node.id);
                 if (node.checked == true) {
                     this.selectedFunctions.push(
-                        node.title+'_'+node.id
+                        node.id
                     )
                 } else {
                     this.selectedFunctions.splice(index, 1);
                 }
 
             },
-            fetch_functionalities() {
+            fetch() {
                 var roleId = this.$route.params.id;
                 axios.get('/roles/'+roleId+'/functionalities')
                     .then((response) => {
@@ -71,12 +71,9 @@
             saveFunctions() {
                 this.$vs.loading()
                 var roleId = this.$route.params.id;
-                axios.put('/api/auth/admin/role/functionality/' +roleId,
+                axios.post('/functionalityrole/'+roleId ,
                     {
-                        headers: {
-                            'authentication': localStorage.getItem('access_token')
-                        },
-                        functions: this.selectedFunctions
+                      functionality_id: this.selectedFunctions
                     }
                 ).then(response => {
                     this.$vs.loading.close()
@@ -113,7 +110,7 @@
         },
         created() {
             this.SelectedNodes()
-            this.fetch_functionalities();
+            this.fetch();
         },
         mounted() {
             this.asyncLoad;
