@@ -145,6 +145,34 @@ const MyRouter = [
 
         }
       },
+      {
+        path: '/attributegroup',
+        name: 'attribute-group',
+        component: () => import('./views/AttributeGroups/AttributeGroups.vue'),
+        meta: {
+          authRequired: true,
+          breadcrumb: [
+            {title: 'داشبورد', url: '/admin'},
+            {title: 'مدیریت گروه ویژگی ها',active: true},
+          ],
+          pageTitle: 'مدیریت گروه ویژگی ها',
+          rule: 'admin'
+        },
+      },
+      {
+        path: '/attribute/:id',
+        name: 'category-attribute',
+        component: () => import('./views/Attribute/Attribute'),
+        meta: {
+          authRequired: true,
+          breadcrumb: [
+            {title: 'داشبورد', url: '/admin'},
+            {title: 'مدیریت ویژگی های دسته',active: true},
+          ],
+          pageTitle: 'مدیریت ویژگی های دسته',
+          rule: 'admin'
+        },
+      },
     ]
   },
   // =============================================================================

@@ -74,7 +74,7 @@ export default [
       },
 
       {
-        url: '/category/attributegroup',
+        url: '/attributegroup',
         name: 'گروه ویژگی ها',
         slug: 'گروه ویژگی ها',
       },
