@@ -87,6 +87,11 @@ export default [
         url: '/discount',
         name: 'تخفیف ها',
         slug: 'تخفیف ها',
+      },
+      {
+        url: '/filemanager',
+        name: 'مدیریت فایل ها',
+        slug: 'مدیریت فایل ها',
       }
 
 

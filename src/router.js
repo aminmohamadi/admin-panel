@@ -173,6 +173,34 @@ const MyRouter = [
           rule: 'admin'
         },
       },
+      {
+        path: '/Profile',
+        name: 'profile',
+        component: () => import('./views/Profile/Profile.vue'),
+        meta: {
+          authRequired: true,
+          breadcrumb: [
+            {title: 'داشبورد', url: '/admin'},
+            {title: 'مدیریت ویژگی های دسته',active: true},
+          ],
+          pageTitle: 'ویرایش پروفایل',
+          rule: 'admin'
+        },
+      },
+      {
+        path: '/filemanager',
+        name: 'filemanager',
+        component: () => import('./views/FileManager/FileManager'),
+        meta: {
+          authRequired: true,
+          breadcrumb: [
+            {title: 'داشبورد', url: '/admin'},
+            {title: 'مدیریت فایل ها',active: true},
+          ],
+          pageTitle: 'مدیریت فایل ها',
+          rule: 'admin'
+        },
+      },
     ]
   },
   // =============================================================================
@@ -251,7 +279,7 @@ const MyRouter = [
       },
       {
         path: '/pages/error-403',
-        name: 'page-error-404',
+        name: 'page-error-403',
         component: () => import('@/views/pages/Error403.vue'),
         meta: {
           rule: 'editor',

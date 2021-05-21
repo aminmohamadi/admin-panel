@@ -15,7 +15,7 @@ const webAuth = new auth0.WebAuth({
   redirectUri: `${window.location.origin + process.env.BASE_URL}callback`,
   clientID: authConfig.clientId,
   responseType: 'id_token',
-  scope: 'openid profile email'
+  scope: 'openid Profile email'
 })
 
 class AuthService extends EventEmitter {

@@ -10,7 +10,7 @@
     <VuePerfectScrollbar class="scroll-area--data-list-add-new">
       <div class="p-6">
         <vs-input label="نام دسته" v-model="dataTitle" class="mt-5 w-full" name="item-name" v-validate="'required'"/>
-        <span class="text-danger text-sm" v-show="errors.has('item-title')">{{ errors.first('item-title') }}</span>
+        <span class="text-danger text-sm" v-show="errors.has('item-name')">{{ errors.first('item-name') }}</span>
       </div>
     </VuePerfectScrollbar>
 
@@ -39,29 +39,17 @@ export default {
   },
   watch: {
     isSidebarActive (val) {
-      console.log(this.data.level)
-      let {
-        parent_id,
-          level
-      } = JSON.parse(JSON.stringify(this.data))
-      this.dataParentId = parent_id
-      this.dataLevel = level
       if (!val) return
       if (!this.data.hasOwnProperty('id')) {
         this.initValues()
         this.$validator.reset()
       } else {
         let {
-          parent_id,
           id,
-          title,
-            level
+          title
         } = JSON.parse(JSON.stringify(this.data))
-        this.dataParentId = parent_id
         this.dataId = id
         this.dataTitle = title
-        this.dataLevel = level
-
         this.initValues()
       }
       // Object.entries(this.data).length === 0 ? this.initValues() : { this.dataId, this.dataTitle, this.dataCategory, this.dataOrder_status, this.dataPrice } = JSON.parse(JSON.stringify(this.data))
@@ -71,8 +59,6 @@ export default {
     return {
       dataId: null,
       dataTitle: '',
-      dataParentId:'',
-      dataLevel:'',
       settings: { // perfectscrollbar settings
         maxScrollbarLength: 60,
         wheelSpeed: .60
@@ -105,37 +91,45 @@ export default {
     submitData () {
       this.$validator.validateAll().then(result => {
         if (result) {
-          let formData = new FormData()
-          formData.append('title', this.dataTitle)
-          formData.append('parent_id', this.dataParentId)
-          if (this.data.id !== null) {
+          if (!this.data.hasOwnProperty('id')) {
+            var customMethod = 'post'
             var customUrl = 'categories'
           } else {
+            customMethod = 'patch'
             customUrl = 'categories/' + this.dataId
-            formData.append('_method', 'patch')
+
           }
-          axios.post(customUrl, formData).then((response) => {
-            if (this.data.level == 1) {
-              this.$parent.$parent.firstLevelCategories = response.data.categories
-            } else if (this.data.level == 2) {
-              this.$parent.$parent.secondLevelCategories = response.data.categories
-            } else if (this.data.level == 3) {
-              this.$parent.$parent.thirdLevelCategories = response.data.categories
+          axios({
+            method: customMethod,
+            url: customUrl,
+            data: {
+              title: this.dataTitle,
+              id: this.dataId,
+              parent_id: this.data.parent_id,
+              level: this.data.level
             }
-            this.$vs.notify({
-              title: response.data.title,
-              text: response.data.message,
-              iconPack: 'feather',
-              icon: 'icon-alert-circle',
-              color: response.data.status
-            })
+
           })
-              .catch((error) => {
-                console.log(error)
+              .then((response) => {
+                if (this.data.level == 1) {
+                  this.$parent.$parent.firstLevelCategories = response.data.categories
+                } else if (this.data.level == 2) {
+                  this.$parent.$parent.secondLevelCategories = response.data.categories
+                } else if (this.data.level == 3) {
+                  this.$parent.$parent.thirdLevelCategories = response.data.categories
+                }
                 this.$vs.notify({
-                  duration: 20,
+                  title: response.data.title,
+                  text: response.data.message,
+                  iconPack: 'feather',
+                  icon: 'icon-' + response.data.icon + '-circle',
+                  color: response.data.status
+                })
+              })
+              .catch((error) => {
+                this.$vs.notify({
                   title: 'خطا',
-                  text: error.response.data.message,
+                  text: error,
                   iconPack: 'feather',
                   icon: 'icon-alert-circle',
                   color: 'danger'
