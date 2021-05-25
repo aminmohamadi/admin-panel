@@ -192,17 +192,18 @@ const MyRouter = [
         name: 'filemanager',
         component: () => import('./views/FileManager/FileManager'),
         meta: {
-          authRequired: true,
-          breadcrumb: [
-            {title: 'داشبورد', url: '/admin'},
-            {title: 'مدیریت فایل ها',active: true},
-          ],
-          pageTitle: 'مدیریت فایل ها',
+          // authRequired: true,
+          // breadcrumb: [
+          //   {title: 'داشبورد', url: '/admin'},
+          //   {title: 'مدیریت فایل ها',active: true},
+          // ],
+          // pageTitle: 'مدیریت فایل ها',
           rule: 'admin'
         },
       },
     ]
   },
+
   // =============================================================================
   // FULL PAGE LAYOUTS
   // =============================================================================

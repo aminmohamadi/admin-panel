@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
+import Vuex from 'vuex';
 
 // Vuesax Component Framework
 import Vuesax from 'vuesax'
+Vue.use(Vuesax)
+
 import 'material-icons/iconfont/material-icons.css' //Material Icons
 import 'vuesax/dist/vuesax.css' // Vuesax
-Vue.use(Vuesax)
 
 
 // axios
@@ -105,6 +107,8 @@ import 'quill/dist/quill.bubble.css' // for bubble theme
 
 Vue.use(VueQuillEditor, /* { default global options } */)
 Vue.config.productionTip = false
+import FileManager from 'laravel-file-manager'
+Vue.use(FileManager, {store})
 
 new Vue({
   router,

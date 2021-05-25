@@ -15,7 +15,6 @@ Vue.use(Vuex)
 import moduleAuth from './auth/moduleAuth.js'
 import moduleECommerce from './eCommerce/moduleECommerce.js'
 
-
 export default new Vuex.Store({
   getters,
   mutations,
@@ -27,7 +26,7 @@ export default new Vuex.Store({
     // chat: moduleChat,
     // email: moduleEmail,
     auth: moduleAuth,
-    eCommerce: moduleECommerce
+    eCommerce: moduleECommerce,
   },
   strict: process.env.NODE_ENV !== 'production'
 })

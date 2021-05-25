@@ -228,6 +228,8 @@ export default {
   },
   created () {
     this.fetch()
+    console.log(this.$store)
+
   },
   mounted () {
     this.isMounted = true
